@@ -20,6 +20,7 @@ function apiCall(url) {
 		maxRedirects: 10
 	}, function(error, response, body) {
 		if(error){ return console.log(error); }
+		console.log("Download Complete");
 		parseJSON(body);
 	});
 }
@@ -37,20 +38,45 @@ function parseJSON(body) {
 function addPetition(petition) {
 		Petition.findOne({'petitionId': petition.id}, function (err, thisPetition) {
 			if (err) return console.log(err);
-			if (thisPetition != null) {
-				thisPetition.title = petition.title;
-				thisPetition.body = petition.body;
-			}
-			else {
+			if (thisPetition == null) {
 				var thisPetition = new Petition();
 				thisPetition.petitionId = petition.id;
-				thisPetition.title = petition.title;
-				thisPetition.body = petition.body;
+				updateIssues(petition);
 			}
 
+			thisPetition.title = petition.title;
+			thisPetition.body = petition.body;
+			//thisPetition.issues = petition.issues;
+			thisPetition.signatureThreshold = petition.signatureThreshold;
+			thisPetition.signatureCount = petition.signatureCount;
+			thisPetition.signaturesNeeded = petition.signaturesNeeded;
+			thisPetition.url = petition.url;
+			thisPetition.deadline = petition.deadline;
+			thisPetition.status = petition.status;
+			thisPetition.response = petition.response;
+			thisPetition.created = petition.created;
+			thisPetition.isSignable = petition.isSignable;
+			thisPetition.isPublic = petition.isPublic;
+
+
 			thisPetition.save(function (err, savedPetition) {
-				if (err) return console.error(err);});
-		});
+				if (err) return console.error(err);
+				updateSignatures(savedPetition);});
+			});
+}
+
+function updateSignatures(petition) {
+	//get the new signatures
+	//get the old signatures
+	//save the new signatures
+	//link the new signatures to the petition
+	//save the petition
+	//delete the old signatures
+	console.log(petition._id + " Saved");
+}
+
+function updateIssues(petition) {
+
 }
 
 apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=30&offset=0&createdBefore=1352924535");
