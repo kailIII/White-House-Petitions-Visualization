@@ -10,14 +10,15 @@ router.get('/', function(req, res, next) {
 
 router.get('/petitions', function(req, res, next) {
 	request({
-		uri: "https://api.whitehouse.gov/v1/petitions.json?limit=3&offset=0&createdBefore=1352924535",
+		uri: "https://api.whitehouse.gov/v1/petitions.json?limit=30&offset=0&createdBefore=1352924535",
 		method: "GET",
 		timeout: 10000,
 		followRedirect: true,
 		maxRedirects: 10
 	}, function(error, response, body) {
 		if(error){ return next(error); }
-    	res.json(body);
+		var data = JSON.parse(body);
+    	res.json(data);
 	});
 });
 

@@ -7,9 +7,7 @@ petitionVis.factory('petitions', ['$http', function($http){
 
 	o.getAll = function() {
 		return $http.get('/petitions').then(function(res){
-			var data = JSON.parse(res.data);
-			console.log(data);
-		   	angular.copy(data.results, o.petitions);
+		   	angular.copy(res.data.results, o.petitions);
 		  });
 	}
 
@@ -19,7 +17,6 @@ petitionVis.factory('petitions', ['$http', function($http){
 petitionVis.controller('MainCtrl', [
 	'$scope', 'petitions',
 	function($scope, petitions){
-		$scope.test = 'Hello world!';
 		$scope.petitions = petitions.petitions;
 	}
 	]).config([

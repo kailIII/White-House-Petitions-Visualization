@@ -19,9 +19,8 @@
   <script type="text/ng-template" id="/home.html">
     <div class="page-header">
       <h1>White House DataVis</h1>
-      <h2>{{test}}</h2>
        <div ng-repeat="petition in petitions">
-        {{petition.id}}
+        <p>{{$index+1}}. {{petition.id}}</p>
       </div>
     </div>
   </script>
