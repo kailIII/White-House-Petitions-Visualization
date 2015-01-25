@@ -3,22 +3,20 @@ var router = express.Router();
 
 var request = require("request");
 
+var mongoose = require('mongoose');
+var Petition = mongoose.model('Petition');
+var Issue = mongoose.model('Issue');
+var Signature = mongoose.model('Signature');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+	res.render('index', { title: 'Express' });
 });
 
 router.get('/petitions', function(req, res, next) {
-	request({
-		uri: "https://api.whitehouse.gov/v1/petitions.json?limit=30&offset=0&createdBefore=1352924535",
-		method: "GET",
-		timeout: 10000,
-		followRedirect: true,
-		maxRedirects: 10
-	}, function(error, response, body) {
-		if(error){ return next(error); }
-		var data = JSON.parse(body);
-    	res.json(data);
+	Petition.find(function(err, petitions){
+		if(err){ return next(err); }
+		res.json(petitions);
 	});
 });
 

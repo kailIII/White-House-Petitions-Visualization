@@ -7,7 +7,8 @@ petitionVis.factory('petitions', ['$http', function($http){
 
 	o.getAll = function() {
 		return $http.get('/petitions').then(function(res){
-		   	angular.copy(res.data.results, o.petitions);
+		   	angular.copy(res.data, o.petitions);
+		   	console.log(res.data);
 		  });
 	}
 

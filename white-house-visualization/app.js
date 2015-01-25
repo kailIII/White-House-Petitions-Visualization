@@ -7,17 +7,16 @@ var bodyParser = require('body-parser');
 
 var request = require('request');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
-var app = express();
-
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/petitions');
 require('./models/Issues');
 require('./models/Signatures');
 require('./models/Petitions');
 
+var routes = require('./routes/index');
+var users = require('./routes/users');
+
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

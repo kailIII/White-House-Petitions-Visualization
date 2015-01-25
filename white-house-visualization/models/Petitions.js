@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 
 var PetitionSchema = new mongoose.Schema({
-  petition_id: String,
-  type: String,
+  petitionId: String,
   title: String,
   body: String,
   issues: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Issue' }],
