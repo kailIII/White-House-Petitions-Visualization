@@ -47,14 +47,14 @@ function addPetition(petition) {
 			thisPetition.title = petition.title;
 			thisPetition.body = petition.body;
 			//thisPetition.issues = petition.issues;
-			thisPetition.signatureThreshold = petition.signatureThreshold;
-			thisPetition.signatureCount = petition.signatureCount;
-			thisPetition.signaturesNeeded = petition.signaturesNeeded;
+			thisPetition.signatureThreshold = parseInt(petition.signatureThreshold);
+			thisPetition.signatureCount = parseInt(petition.signatureCount);
+			thisPetition.signaturesNeeded = parseInt(petition.signaturesNeeded);
 			thisPetition.url = petition.url;
-			thisPetition.deadline = petition.deadline;
+			thisPetition.deadline = new Date(petition.deadline);
 			thisPetition.status = petition.status;
 			thisPetition.response = petition.response;
-			thisPetition.created = petition.created;
+			thisPetition.created = new Date(petition.created);
 			thisPetition.isSignable = petition.isSignable;
 			thisPetition.isPublic = petition.isPublic;
 

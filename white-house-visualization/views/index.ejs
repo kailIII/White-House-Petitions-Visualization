@@ -2,11 +2,18 @@
 <head>
   <title>White House DataVis</title>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <link href="bower_components/animate.css/animate.min.css" rel="stylesheet">
   <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="stylesheets/styles.css" rel="stylesheet">
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <link href="bower_components/bootstrap-material-design/dist/css/material.min.css" rel="stylesheet">
+  <link href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" rel="stylesheet">
+  <link href="bower_components/bootstrap-material-design/dist/css/material-wfont.min.css" rel="stylesheet">
+  <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+  <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
   <script src="javascripts/angularApp.js"></script>
 </head>
 <body ng-app="petitionVis">
@@ -18,19 +25,32 @@
 
   <script type="text/ng-template" id="/home.html">
 	<div class="page-header">
-	  <h1>White House DataVis</h1>
+	  <h1 header>White House Data Vis</h1>
 	</div>
 
-  <div ng-repeat="petition in petitions">
+	<button class="btn btn-primary btn-raised">Test</button>
+
+  <div ng-repeat="petition in petitions|orderBy:'signatureCount':'reverse'">
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	  <div class="panel panel-default">
 		  <div class="panel-heading">
-		    <h3 class="panel-title"><a href={{petition.url}}>{{petition.title}}</a></h3>
+		    <h3 panelheader class="panel-title"><a href={{petition.url}}>{{petition.title}}</a></h3>
 		  </div>
 		  <div class="panel-body">
 		    <p>{{petition.body}}</p>
-		    <p>Status: {{petition.status}}</p>
+		    <p>Signature Threshold: {{petition.signaturThreshold}}</p>
+		    <p>Signature Count: {{petition.signatureCount}}</p>
 		    <p>Signatures Needed: {{petition.signaturesNeeded}}</p>
+		    <p>Deadline: {{petition.deadline}}</p>
+		    <p>Status: {{petition.status}}</p>
+		    <p>Response: {{petition.response}}</p>
+		    <p>Created: {{petition.created}}</p>
+		    <p>Signable: {{petition.isSignable}}</p>
+		    <p>Public: {{petition.isPublic}}</p>
+
+		    <div class="progress progress-striped active">
+                <div progress class="progress-bar" ng-style="{ 'width' : '{{100 * (petition.signatureCount / petition.signaturesNeeded)}}%' }"></div>
+            </div>
 		  </div>
 		</div>
 	</div>
