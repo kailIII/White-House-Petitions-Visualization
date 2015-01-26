@@ -14,7 +14,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/petitions', function(req, res, next) {
-	Petition.find(function(err, petitions){
+	var q = Petition.find({}).limit(20);
+	q.exec(function(err, petitions) {
 		if(err){ return next(err); }
 		res.json(petitions);
 	});

@@ -57,14 +57,13 @@ function addPetition(petition) {
 			thisPetition.created = new Date(petition.created);
 			thisPetition.isSignable = petition.isSignable;
 			thisPetition.isPublic = petition.isPublic;
-			
+
 			if (thisPetition.signaturesNeeded == 0) {
 				thisPetition.signatureProgress = 100;
 			}
 			else {
 				thisPetition.signatureProgress = (thisPetition.signatureCount / thisPetition.signaturesNeeded) * 100;
 			}
-
 
 			thisPetition.save(function (err, savedPetition) {
 				if (err) return console.error(err);

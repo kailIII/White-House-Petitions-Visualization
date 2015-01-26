@@ -6,14 +6,24 @@
   <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="stylesheets/styles.css" rel="stylesheet">
+  <link href="bower_components/snackbarjs/dist/snackbar.min.css" rel=stylesheet>
+
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
+
+  <!--<script type="text/javascript" src="bower_components/angular-ui-utils/ui-utils.js"></script>-->
+
   <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
   <link href="bower_components/bootstrap-material-design/dist/css/material.min.css" rel="stylesheet">
   <link href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" rel="stylesheet">
   <link href="bower_components/bootstrap-material-design/dist/css/material-wfont.min.css" rel="stylesheet">
   <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
   <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+  <script src="bower_components/snackbarjs/dist/snackbar.min.js"></script>
+  <!--<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>-->
+  <!--<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min"></script>-->
+
+
   <script src="javascripts/angularApp.js"></script>
 </head>
 <body ng-app="petitionVis">
@@ -29,6 +39,19 @@
 	</div>
 
 	<button class="btn btn-primary btn-raised">Test</button>
+        <div class="btn-group">
+            <a href="javascript:void(0)" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Sort
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="javascript:void(0)" ng-click="sort()">Option 1</a></li>
+                <li><a href="javascript:void(0)" ng-click="sort()">Option 2</a></li>
+                <li><a href="javascript:void(0)" ng-click="sort()">Option 3</a></li>
+            </ul>
+    </div>
+
+
 
   <div ng-repeat="petition in petitions|orderBy:'signatureProgress':'reverse'">
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -38,6 +61,7 @@
 		  </div>
 		  <div class="panel-body">
 		    <p>{{petition.body}}</p>
+		    <p>Signature ID: {{petition.petitionId}}</p>
 		    <p>Signature Threshold: {{petition.signaturThreshold}}</p>
 		    <p>Signature Count: {{petition.signatureCount}}</p>
 		    <p>Signatures Needed: {{petition.signaturesNeeded}}</p>

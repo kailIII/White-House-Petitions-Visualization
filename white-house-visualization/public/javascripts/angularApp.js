@@ -64,7 +64,11 @@ petitionVis.controller('MainCtrl', [
 	'$scope', 'petitions',
 	function($scope, petitions){
 		$scope.petitions = petitions.petitions;
-		$.material.ripples()
+		$.material.ripples();
+
+		$scope.sort = function() {
+			console.log("Sort");
+		};
 	}
 	]).config([
 	'$stateProvider',

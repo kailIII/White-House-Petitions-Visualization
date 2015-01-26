@@ -1,0 +1,28 @@
+{
+  "name": "\"Petition Vis\"",
+  "version": "0.0.5",
+  "homepage": "https://github.com/triestpa/White-House-Petitions-Visualization",
+  "authors": [
+    "triestpa <triestpa@grinnell.edu>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap": "~0.12.0",
+    "bootstrap-material-design": "~0.2.1",
+    "angular-ui-router": "~0.2.13",
+    "angular-ui-utils": "bower",
+    "animate.css": "~3.2.0",
+    "arrive": "~2.0.0",
+    "bootstrap": "~3.3.2",
+    "snackbarjs": "~1.0.0",
+    "ngInfiniteScroll": "1.0.0"
+  }
+}
