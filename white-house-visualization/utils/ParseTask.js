@@ -57,6 +57,13 @@ function addPetition(petition) {
 			thisPetition.created = new Date(petition.created);
 			thisPetition.isSignable = petition.isSignable;
 			thisPetition.isPublic = petition.isPublic;
+			
+			if (thisPetition.signaturesNeeded == 0) {
+				thisPetition.signatureProgress = 100;
+			}
+			else {
+				thisPetition.signatureProgress = (thisPetition.signatureCount / thisPetition.signaturesNeeded) * 100;
+			}
 
 
 			thisPetition.save(function (err, savedPetition) {
@@ -79,5 +86,5 @@ function updateIssues(petition) {
 
 }
 
-apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=30&offset=0&createdBefore=1352924535");
+apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=3000");
 

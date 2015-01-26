@@ -30,11 +30,11 @@
 
 	<button class="btn btn-primary btn-raised">Test</button>
 
-  <div ng-repeat="petition in petitions|orderBy:'signatureCount':'reverse'">
+  <div ng-repeat="petition in petitions|orderBy:'signatureProgress':'reverse'">
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	  <div class="panel panel-default">
 		  <div class="panel-heading">
-		    <h3 panelheader class="panel-title"><a href={{petition.url}}>{{petition.title}}</a></h3>
+		    <h3 panelheader class="panel-title"><a href={{petition.url}}>{{$index +1}}. {{petition.title}}</a></h3>
 		  </div>
 		  <div class="panel-body">
 		    <p>{{petition.body}}</p>
@@ -49,7 +49,7 @@
 		    <p>Public: {{petition.isPublic}}</p>
 
 		    <div class="progress progress-striped active">
-                <div progress class="progress-bar" ng-style="{ 'width' : '{{100 * (petition.signatureCount / petition.signaturesNeeded)}}%' }"></div>
+                <div progress class="progress-bar" ng-style="{ 'width' : '{{petition.signatureProgress}}%' }"></div>
             </div>
 		  </div>
 		</div>

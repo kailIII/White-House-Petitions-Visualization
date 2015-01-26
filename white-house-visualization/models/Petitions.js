@@ -9,6 +9,7 @@ var PetitionSchema = new mongoose.Schema({
   signatureThreshold: Number,
   signatureCount: Number,
   signaturesNeeded: Number,
+  signatureProgress: Number,
   url: String,
   deadline: Date,
   status: String,
