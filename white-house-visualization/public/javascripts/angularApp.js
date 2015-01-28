@@ -1,4 +1,4 @@
-var petitionVis = angular.module('petitionVis', ['ui.router']);
+var petitionVis = angular.module('petitionVis', ['ui.router', 'infinite-scroll']);
 
 petitionVis.factory('petitions', ['$http', function($http){
 	var o = {
@@ -14,6 +14,8 @@ petitionVis.factory('petitions', ['$http', function($http){
 
 	return o;
 }]);
+
+//|orderBy:'signatureProgress':'reverse'
 
 petitionVis.filter('orderObjectBy', function() {
 	return function(items, field, reverse) {
@@ -50,7 +52,7 @@ petitionVis.directive('panelheader', function() {
 			return {
 				pre: function preLink(scope, element, attributes, $index) {
 				if (scope.$index == 1) {
-					angular.element(element).addClass('blue');
+				//	angular.element(element).addClass('blue');
 				}
 				},
 				post: function postLink( scope, element, attributes ) {
@@ -69,6 +71,10 @@ petitionVis.controller('MainCtrl', [
 		$scope.sort = function() {
 			console.log("Sort");
 		};
+
+		var loadMore = function() {
+			petitions.getNext();
+		}
 	}
 	]).config([
 	'$stateProvider',
