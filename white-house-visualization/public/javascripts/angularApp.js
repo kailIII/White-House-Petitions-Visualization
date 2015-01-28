@@ -10,7 +10,31 @@ petitionVis.factory('petitions', ['$http', function($http){
 			angular.copy(res.data, o.petitions);
 			console.log(res.data);
 		});
-	}
+	};
+
+	o.get = function(id) {
+		return $http.get('/petitions/' + id).then(function(res){
+		    return res.data;
+		});
+	};
+
+	o.getSorted = function(sortBy, reverseOrder) {
+		return $http.get('/petitions?sort=' + sortBy + "&reverseOrder=" + reverseOrder).then(function(res){
+		    return res.data;
+		});
+	};
+
+	o.getSortedLessThan = function(sortBy, reverseOrder, lessThan) {
+		return $http.get('/petitions?sort=' + sortBy + '&reverseOrder=' + reverseOrder + & 'lessThan=' + lessThan).then(function(res){
+		    return res.data;
+		)};
+	};
+
+	o.getSortedGreaterThan = function(sortBy, reverseOrder, greaterThan) {
+		return $http.get('/petitions?sort=' + sortBy + '&reverseOrder=' + reverseOrder + & 'greaterThan=' + greaterThan).then(function(res){
+		    return res.data;
+		)};
+	};
 
 	return o;
 }]);
@@ -66,7 +90,7 @@ petitionVis.controller('MainCtrl', [
 	'$scope', 'petitions',
 	function($scope, petitions){
 		$scope.petitions = petitions.petitions;
-		$.material.ripples();
+		//$.material.ripples();
 
 		$scope.sort = function() {
 			console.log("Sort");
