@@ -45,13 +45,18 @@
 
      <div class="btn-group" dropdown is-open="status.isopen">
       <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
-        Sort By <span class="caret"></span>
+        Order By: {{sortLabel}} <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li><a href="javascript:void(0)" ng-click="setSortType(sortEnum.TITLE)">Alphabetical</a></li>
+        <li><a href="javascript:void(0)" ng-click="setSortType(sortEnum.TITLE)">Title</a></li>
         <li><a href="javascript:void(0)" ng-click="setSortType(sortEnum.SIGNATURES)">Signature Count</a></li>
-        <li><a href="javascript:void(0)" ng-click="setSortType(sortEnum.CREATED)">Created</a></li>
+        <li><a href="javascript:void(0)" ng-click="setSortType(sortEnum.CREATED)">Date Created</a></li>
       </ul>
+    </div>
+
+    <div class="btn-group">
+        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Ascending'">Ascending</label>
+        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Descending'">Descending</label>
     </div>
 
     <button class="btn btn-primary" ng-click="sort()">Sort</button>

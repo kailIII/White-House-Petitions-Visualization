@@ -94,24 +94,35 @@ petitionVis.controller('MainCtrl', [
 		    CREATED : 2,
 		};
 
-		$scope.sortBy = $scope.sortEnum.TITLE;
-		$scope.reverse = false;
+
+		$scope.radioModel = 'Ascending';
+		$scope.sortBy = 'title';
+		$scope.sortLabel = 'Title'
 
 		$scope.setSortType = function(sortBy) {
 			if (sortBy == 0) {
 				$scope.sortBy = 'title';
+				$scope.sortLabel = 'Title'
 			}
 			else if (sortBy == 1) {
 				$scope.sortBy = 'signatureCount';
+				$scope.sortLabel = 'Signature Count'
 			}
 			else {
 				$scope.sortBy = 'created';
+				$scope.sortLabel = 'Date Created'
 			}
 		};
 
+
 		$scope.sort = function() {
-			petitions.getSorted($scope.sortBy, $scope.reverse);
-		}
+			if ($scope.radioModel == 'Ascending') {
+				petitions.getSorted($scope.sortBy, false);
+			}
+			else {
+				petitions.getSorted($scope.sortBy, true);
+			}
+		};
 	}
 	]).config([
 	'$stateProvider',
@@ -124,7 +135,7 @@ petitionVis.controller('MainCtrl', [
 			controller: 'MainCtrl',
 			resolve: {
 				petitionPromise: ['petitions', function(petitions){
-					return petitions.getSorted('signatureCount', false);
+					return petitions.getSorted('title', false);
 				}]
 			}
 		})
