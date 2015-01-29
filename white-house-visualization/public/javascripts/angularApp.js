@@ -19,8 +19,8 @@ petitionVis.factory('petitions', ['$http', function($http){
 		});
 	};
 
-	o.getSorted = function(sortBy, reverseOrder) {
-		return $http.get('/petitions?sort=' + sortBy + "&reverse=" + reverseOrder.toString()).then(function(res){
+	o.getSorted = function(sortBy, reverseOrder, limit) {
+		return $http.get('/petitions?sort=' + sortBy + "&reverse=" + reverseOrder.toString() + "&limit=" + limit).then(function(res){
 		    angular.copy(res.data, o.petitions);
 			console.log(res.data);
 		});
@@ -84,10 +84,6 @@ petitionVis.controller('MainCtrl', [
 		$scope.petitions = petitions.petitions;
 		//$.material.ripples();
 
-		$scope.loadMore = function() {
-			//petitions.getNext();
-		};
-
 		$scope.sortEnum = {
 		    TITLE : 0,
 		    SIGNATURES : 1,
@@ -97,32 +93,39 @@ petitionVis.controller('MainCtrl', [
 
 		$scope.radioModel = 'Ascending';
 		$scope.sortBy = 'title';
-		$scope.sortLabel = 'Title'
+		$scope.sortLabel = 'Title';
+		$scope.limit = 20;
 
 		$scope.setSortType = function(sortBy) {
 			if (sortBy == 0) {
 				$scope.sortBy = 'title';
-				$scope.sortLabel = 'Title'
+				$scope.sortLabel = 'Title';
 			}
 			else if (sortBy == 1) {
 				$scope.sortBy = 'signatureCount';
-				$scope.sortLabel = 'Signature Count'
+				$scope.sortLabel = 'Signature Count';
 			}
 			else {
 				$scope.sortBy = 'created';
-				$scope.sortLabel = 'Date Created'
+				$scope.sortLabel = 'Date Created';
 			}
+		};
+
+		$scope.setLimit = function(limit) {
+			$scope.limit = limit;
 		};
 
 
 		$scope.sort = function() {
 			if ($scope.radioModel == 'Ascending') {
-				petitions.getSorted($scope.sortBy, false);
+				petitions.getSorted($scope.sortBy, false, $scope.limit);
 			}
 			else {
-				petitions.getSorted($scope.sortBy, true);
+				petitions.getSorted($scope.sortBy, true, $scope.limit);
 			}
 		};
+
+		$scope.loadMore = function() {};
 	}
 	]).config([
 	'$stateProvider',
@@ -135,7 +138,7 @@ petitionVis.controller('MainCtrl', [
 			controller: 'MainCtrl',
 			resolve: {
 				petitionPromise: ['petitions', function(petitions){
-					return petitions.getSorted('title', false);
+					return petitions.getSorted('title', false, 20);
 				}]
 			}
 		})
