@@ -42,9 +42,13 @@
 	  <h1 header>White House Data Vis</h1>
 	</div>
 
-<div class="sort">
+  <form method="get" action="/files/dbexport-1-29-2015.csv">
+      <button class="btn btn-warning">Download CSV</button>
+  </form>
+
+<div class="row sort">
      <div class="btn-group" dropdown is-open="status.isSortopen">
-      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="disabled">
         Order By: {{sortLabel}} <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
@@ -55,14 +59,14 @@
     </div>
 
     <div class="btn-group">
-        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Ascending'">Ascending</label>
-        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Descending'">Descending</label>
+        <label class="btn btn-default" ng-model="radioModel" btn-radio="'Ascending'">Ascending</label>
+        <label class="btn btn-default" ng-model="radioModel" btn-radio="'Descending'">Descending</label>
     </div>
 
 
 <!--
     <div class="btn-group" dropdown is-open="status.isLimitopen">
-      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+      <button type="button" class="btn btn-success dropdown-toggle" dropdown-toggle ng-disabled="disabled">
         Limit: {{limit}} <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
@@ -74,7 +78,8 @@
     </div>
     -->
 
-    <button class="btn btn-primary" ng-click="sort()">Sort</button>
+    <button class="btn btn-success" ng-click="sort()">Sort</button>
+
   </div>
 
 <div infinite-scroll="loadMore()" infinite-scroll-distance="0">
@@ -87,7 +92,6 @@
 		  <div class="panel-body">
 		    <p>{{petition.body}}</p>
 		    <p>Signature ID: {{petition.petitionId}}</p>
-		    <p>Signature Threshold: {{petition.signaturThreshold}}</p>
 		    <p>Signature Count: {{petition.signatureCount}}</p>
 		    <p>Signatures Needed: {{petition.signaturesNeeded}}</p>
 		    <p>Deadline: {{petition.deadline}}</p>

@@ -101,9 +101,9 @@ petitionVis.controller('MainCtrl', [
 		    CREATED : 2,
 		};
 
-		$scope.radioModel = 'Ascending';
-		$scope.sortBy = 'title';
-		$scope.sortLabel = 'Title';
+		$scope.radioModel = 'Descending';
+		$scope.sortBy = 'signatureCount';
+		$scope.sortLabel = 'Signature Count';
 
 		$scope.setSortType = function(sortBy) {
 			if (sortBy == 0) {
@@ -159,7 +159,7 @@ petitionVis.controller('MainCtrl', [
           	},
 			resolve: {
 				petitionPromise: ['petitions', function(petitions){
-					return petitions.getSorted('title', false, 2000);
+					return petitions.getSorted('signatureCount', true, 2000);
 				}]
 			}
 		})
