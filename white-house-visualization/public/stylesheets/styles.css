@@ -1,7 +1,14 @@
-.blue {
-	color: blue;
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-.white {
-	color: white;
+a {
+  color: #00B7FF;
+}
+
+.sort {
+	margin-bottom: 25px;
+	margin-left: auto;
+    margin-right: auto;
 }

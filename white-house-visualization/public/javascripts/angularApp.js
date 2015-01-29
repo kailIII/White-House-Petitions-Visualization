@@ -30,9 +30,9 @@ petitionVis.factory('petitions', ['$http', function($http){
 		    console.log(res.data);
 			var completeTime = new Date().getTime();
 			var elapsedTime = (completeTime - startTime) / 1000;
-			toastr.success('Data Loaded in ' + elapsedTime + " Seconds");
+			toastr.success('Data Returned in ' + elapsedTime + "s");
 		    angular.copy(res.data, o.petitions);
-		   	angular.copy(res.data.slice(0,20), o.visiblePetitions);
+		   	angular.copy(res.data.slice(0,5), o.visiblePetitions);
 		});
 	};
 
@@ -104,7 +104,6 @@ petitionVis.controller('MainCtrl', [
 		$scope.radioModel = 'Ascending';
 		$scope.sortBy = 'title';
 		$scope.sortLabel = 'Title';
-		$scope.limit = 20;
 
 		$scope.setSortType = function(sortBy) {
 			if (sortBy == 0) {
@@ -121,9 +120,12 @@ petitionVis.controller('MainCtrl', [
 			}
 		};
 
+/*
+		$scope.limit = 20;
 		$scope.setLimit = function(limit) {
 			$scope.limit = limit;
 		};
+		*/
 
 
 		$scope.sort = function() {
@@ -137,7 +139,7 @@ petitionVis.controller('MainCtrl', [
 			toastr.info('Loading From Database...')
 		};
 
-		var listMax = 20;
+		var listMax = 5;
 		$scope.loadMore = function() {
 			listMax++
       		$scope.visiblePetitions.push($scope.petitions[listMax]);
@@ -152,9 +154,12 @@ petitionVis.controller('MainCtrl', [
 			url: '/home',
 			templateUrl: '/home.html',
 			controller: 'MainCtrl',
+			data: {
+            	css: 'styles/style.css'
+          	},
 			resolve: {
 				petitionPromise: ['petitions', function(petitions){
-					return petitions.getSorted('title', false, 20);
+					return petitions.getSorted('title', false, 2000);
 				}]
 			}
 		})
