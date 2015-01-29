@@ -39,7 +39,7 @@
 
   <script type="text/ng-template" id="/home.html">
 	<div class="page-header">
-	  <h1 header>White House Data Vis</h1>
+	  <h1 header>White House Petitions</h1>
 	</div>
 
   <form method="get" action="/files/dbexport-1-29-2015.csv">
@@ -100,9 +100,9 @@
 		    <p>Signable: {{petition.isSignable}}</p>
 		    <p>Public: {{petition.isPublic}}</p>
 
-		    <div class="progress progress-striped active">
+		  <!--  <div class="progress progress-striped active">
                 <div progress class="progress-bar" ng-style="{ 'width' : '{{petition.signatureProgress}}%' }"></div>
-            </div>
+            </div> -->
 		  </div>
 		</div>
   </div>
