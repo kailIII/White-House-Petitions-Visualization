@@ -1,4 +1,4 @@
-var petitionVis = angular.module('petitionVis', ['ui.router', 'infinite-scroll']);
+var petitionVis = angular.module('petitionVis', ['ui.router', 'infinite-scroll', 'ui.bootstrap']);
 
 petitionVis.factory('petitions', ['$http', function($http){
 	var o = {
@@ -14,46 +14,32 @@ petitionVis.factory('petitions', ['$http', function($http){
 
 	o.get = function(id) {
 		return $http.get('/petitions/' + id).then(function(res){
-		    return res.data;
+			angular.copy(res.data, o.petitions);
+			console.log(res.data);
 		});
 	};
 
 	o.getSorted = function(sortBy, reverseOrder) {
-		return $http.get('/petitions?sort=' + sortBy + "&reverseOrder=" + reverseOrder).then(function(res){
-		    return res.data;
+		return $http.get('/petitions?sort=' + sortBy + "&reverse=" + reverseOrder.toString()).then(function(res){
+		    angular.copy(res.data, o.petitions);
+			console.log(res.data);
 		});
 	};
 
 	o.getSortedLessThan = function(sortBy, reverseOrder, lessThan) {
-		return $http.get('/petitions?sort=' + sortBy + '&reverseOrder=' + reverseOrder + & 'lessThan=' + lessThan).then(function(res){
-		    return res.data;
-		)};
+		return $http.get('/petitions?sort=' + sortBy + '&reverse=' + reverseOrder.toString() + '&lessThan=' + lessThan).then(function(res){
+		   	o.petitions.push(res.data);
+		});
 	};
 
 	o.getSortedGreaterThan = function(sortBy, reverseOrder, greaterThan) {
-		return $http.get('/petitions?sort=' + sortBy + '&reverseOrder=' + reverseOrder + & 'greaterThan=' + greaterThan).then(function(res){
-		    return res.data;
-		)};
+		return $http.get('/petitions?sort=' + sortBy + '&reverse=' + reverseOrder.toString() + '&greaterThan=' + greaterThan).then(function(res){
+		   	o.petitions.push(res.data);
+		});
 	};
 
 	return o;
 }]);
-
-//|orderBy:'signatureProgress':'reverse'
-
-petitionVis.filter('orderObjectBy', function() {
-	return function(items, field, reverse) {
-		var filtered = [];
-		angular.forEach(items, function(item) {
-			filtered.push(item);
-		});
-		filtered.sort(function (a, b) {
-			return (a[field] > b[field] ? 1 : -1);
-		});
-		if(reverse) filtered.reverse();
-		return filtered;
-	};
-});
 
 petitionVis.directive('header', function() {
 	return {
@@ -86,18 +72,45 @@ petitionVis.directive('panelheader', function() {
 	}
 });
 
+petitionVis.sortEnum = {
+    TITLE : 0,
+    SIGNATURES : 1,
+    CREATED : 2,
+}
+
 petitionVis.controller('MainCtrl', [
 	'$scope', 'petitions',
 	function($scope, petitions){
 		$scope.petitions = petitions.petitions;
 		//$.material.ripples();
 
-		$scope.sort = function() {
-			console.log("Sort");
+		$scope.loadMore = function() {
+			//petitions.getNext();
 		};
 
-		var loadMore = function() {
-			petitions.getNext();
+		$scope.sortEnum = {
+		    TITLE : 0,
+		    SIGNATURES : 1,
+		    CREATED : 2,
+		};
+
+		$scope.sortBy = $scope.sortEnum.TITLE;
+		$scope.reverse = false;
+
+		$scope.setSortType = function(sortBy) {
+			if (sortBy == 0) {
+				$scope.sortBy = 'title';
+			}
+			else if (sortBy == 1) {
+				$scope.sortBy = 'signatureCount';
+			}
+			else {
+				$scope.sortBy = 'created';
+			}
+		};
+
+		$scope.sort = function() {
+			petitions.getSorted($scope.sortBy, $scope.reverse);
 		}
 	}
 	]).config([
@@ -111,7 +124,7 @@ petitionVis.controller('MainCtrl', [
 			controller: 'MainCtrl',
 			resolve: {
 				petitionPromise: ['petitions', function(petitions){
-					return petitions.getAll();
+					return petitions.getSorted('signatureCount', false);
 				}]
 			}
 		})

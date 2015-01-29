@@ -41,6 +41,9 @@ router.get('/petitions', function(req, res, next) {
 	if (limit != null) {
 		q.limit(limit);
 	}
+	else {
+		q.limit(20);
+	}
 
 	var skip = req.query.skip;
 	if (skip != null) {
