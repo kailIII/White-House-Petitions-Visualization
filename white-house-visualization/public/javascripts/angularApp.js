@@ -1,8 +1,11 @@
 var petitionVis = angular.module('petitionVis', ['ui.router', 'infinite-scroll', 'ui.bootstrap']);
 
+var startTime = new Date().getTime();
+
 petitionVis.factory('petitions', ['$http', function($http){
 	var o = {
-		petitions: []
+		petitions: [],
+		visiblePetitions: []
 	};
 
 	o.getAll = function() {
@@ -21,8 +24,15 @@ petitionVis.factory('petitions', ['$http', function($http){
 
 	o.getSorted = function(sortBy, reverseOrder, limit) {
 		return $http.get('/petitions?sort=' + sortBy + "&reverse=" + reverseOrder.toString() + "&limit=" + limit).then(function(res){
+		    if (res == null || res.data == null) {
+		    	toastr.success('Error Loading Data');
+		    }
+		    console.log(res.data);
+			var completeTime = new Date().getTime();
+			var elapsedTime = (completeTime - startTime) / 1000;
+			toastr.success('Data Loaded in ' + elapsedTime + " Seconds");
 		    angular.copy(res.data, o.petitions);
-			console.log(res.data);
+		   	angular.copy(res.data.slice(0,20), o.visiblePetitions);
 		});
 	};
 
@@ -82,6 +92,7 @@ petitionVis.controller('MainCtrl', [
 	'$scope', 'petitions',
 	function($scope, petitions){
 		$scope.petitions = petitions.petitions;
+		$scope.visiblePetitions = petitions.visiblePetitions;
 		//$.material.ripples();
 
 		$scope.sortEnum = {
@@ -89,7 +100,6 @@ petitionVis.controller('MainCtrl', [
 		    SIGNATURES : 1,
 		    CREATED : 2,
 		};
-
 
 		$scope.radioModel = 'Ascending';
 		$scope.sortBy = 'title';
@@ -123,9 +133,15 @@ petitionVis.controller('MainCtrl', [
 			else {
 				petitions.getSorted($scope.sortBy, true, $scope.limit);
 			}
+			startTime = new Date().getTime();
+			toastr.info('Loading From Database...')
 		};
 
-		$scope.loadMore = function() {};
+		var listMax = 20;
+		$scope.loadMore = function() {
+			listMax++
+      		$scope.visiblePetitions.push($scope.petitions[listMax]);
+		};
 	}
 	]).config([
 	'$stateProvider',
