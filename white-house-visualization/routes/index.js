@@ -42,7 +42,7 @@ router.get('/petitions', function(req, res, next) {
 		q.limit(limit);
 	}
 	else {
-		q.limit(20);
+		q.limit(2000);
 	}
 
 	var skip = req.query.skip;

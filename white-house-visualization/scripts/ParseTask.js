@@ -7,6 +7,10 @@ require('../models/Issues');
 require('../models/Signatures');
 require('../models/Petitions');
 
+var schedule = require('node-schedule');
+var rule = new schedule.RecurrenceRule();
+rule.hour = 24;
+
 var Petition = mongoose.model('Petition');
 var Issue = mongoose.model('Issue');
 var Signature = mongoose.model('Signature');
@@ -85,5 +89,6 @@ function updateIssues(petition) {
 
 }
 
-apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=3000");
-
+var recuringQuery = schedule.scheduleJob(rule, function(){
+	apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=3000");
+});
