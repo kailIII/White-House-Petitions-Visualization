@@ -120,7 +120,7 @@ petitionVis.controller('MainCtrl', [
 			}
 		};
 
-/*
+		/*
 		$scope.limit = 20;
 		$scope.setLimit = function(limit) {
 			$scope.limit = limit;

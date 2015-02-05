@@ -9,7 +9,7 @@ require('../models/Petitions');
 
 var schedule = require('node-schedule');
 var rule = new schedule.RecurrenceRule();
-rule.hour = 24;
+rule.hour = 12;
 
 var Petition = mongoose.model('Petition');
 var Issue = mongoose.model('Issue');
@@ -63,11 +63,10 @@ function addPetition(petition) {
 			thisPetition.isPublic = petition.isPublic;
 
 			if (thisPetition.signaturesNeeded == 0) {
-				thisPetition.signatureProgress = 100;
+				thisPetition.signaturesNeeded = 100000;
 			}
-			else {
-				thisPetition.signatureProgress = (thisPetition.signatureCount / thisPetition.signaturesNeeded) * 100;
-			}
+
+			thisPetition.signatureProgress = (thisPetition.signatureCount / thisPetition.signaturesNeeded) * 100;
 
 			thisPetition.save(function (err, savedPetition) {
 				if (err) return console.error(err);
@@ -87,6 +86,11 @@ function updateSignatures(petition) {
 
 function updateIssues(petition) {
 
+}
+
+function getGeoPoints(zipcode) {
+	//query geocoding api
+	//save resulting points to signature entry
 }
 
 var recuringQuery = schedule.scheduleJob(rule, function(){
