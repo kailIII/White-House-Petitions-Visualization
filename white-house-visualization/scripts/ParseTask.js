@@ -32,12 +32,21 @@ function apiCall(url) {
 function parseJSON(body) {
 	var data = JSON.parse(body);
 	var petitions = data.results;
+	var count = petitions.length;
 
-	for (var i = 0; i < petitions.length; i++) {
-		var petition = petitions[i];
-		addPetition(petition);
-	}
+	var recursiveCommentCall = function getNext(i) {
+			   	if (i >= count) return console.log("All Petitions Downloaded");
+			   	else {
+			   		//wait .5 seconds between calls
+			  		setTimeout(function() {
+					  	addPetition(petitions[i]);
+				  		getNext(i+1);
+					}, 500);
+			    }
+			};
+	recursiveCommentCall(0);
 }
+
 
 function addPetition(petition) {
 		Petition.findOne({'petitionId': petition.id}, function (err, thisPetition) {
@@ -70,18 +79,67 @@ function addPetition(petition) {
 
 			thisPetition.save(function (err, savedPetition) {
 				if (err) return console.error(err);
+				console.log("Petition Saved: " + savedPetition.petitionId);
 				updateSignatures(savedPetition);});
 			});
 }
 
 function updateSignatures(petition) {
+	var queryURL = "https://api.whitehouse.gov/v1/petitions/" + petition.petitionId + "/signatures.json?limit=10000";
+
+	request({
+		uri: queryURL,
+		method: "GET",
+		timeout: 10000,
+		followRedirect: true,
+		maxRedirects: 10
+	}, function(error, response, body) {
+		if(error){ return console.log(error); }
+		console.log("Signature Download Complete");
+		parseSignatureJSON(body);
+	});
+
 	//get the new signatures
 	//get the old signatures
 	//save the new signatures
 	//link the new signatures to the petition
 	//save the petition
 	//delete the old signatures
-	console.log(petition._id + " Saved");
+}
+
+function parseSignatureJSON(body) {
+	var data = JSON.parse(body);
+	var signatures = data.results;
+	if (signatures != null) {
+		for (var i = 0; i < signatures.length; i++) {
+			addSignature(signatures[i]);
+		}
+	}
+	else {
+		console.error("Signatures Returned Null");
+	}
+}
+
+function addSignature(signature) {
+	Signature.findOne({'signatureId': signature.id}, function (err, thisSignature) {
+				if (err) return console.log(err);
+				if (thisSignature == null) {
+					var thisSignature = new Signature();
+
+					thisSignature.signatureId = signature.id;
+					thisSignature.petitionId = signature.petitionId;
+					thisSignature.name = signature.name;
+					thisSignature.city = signature.city;
+					thisSignature.state = signature.state;
+					thisSignature.zip = signature.zip;
+					thisSignature.created = new Date(signature.created * 1000);
+
+					thisSignature.save(function (err, savedSignatue) {
+						if (err) {return console.error(err);}
+						else {console.log("Signature Saved: " + savedSignatue.signatureId)}
+					});
+		}
+	});
 }
 
 function updateIssues(petition) {
@@ -93,6 +151,7 @@ function getGeoPoints(zipcode) {
 	//save resulting points to signature entry
 }
 
+apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=3000");
 var recuringQuery = schedule.scheduleJob(rule, function(){
 	apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=3000");
 });
