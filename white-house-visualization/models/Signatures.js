@@ -1,10 +1,13 @@
 var mongoose = require('mongoose');
 
 var SignatureSchema = new mongoose.Schema({
-  signature_id: String,
+  signatureId: String,
+  petitionId: String,
   name: String,
+  city: String,
+  state: String,
   zip: String,
-  created: String
+  created: Date
 });
 
 mongoose.model('Signature', SignatureSchema);
