@@ -41,7 +41,7 @@ function parseJSON(body) {
 			  		setTimeout(function() {
 					  	addPetition(petitions[i]);
 				  		getNext(i+1);
-					}, 500);
+					}, 5000);
 			    }
 			};
 	recursiveCommentCall(0);

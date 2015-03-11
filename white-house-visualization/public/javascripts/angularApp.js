@@ -158,8 +158,8 @@ petitionVis.controller('MainCtrl', [
 	}])
 	.controller('SignaturesCtrl', [
 	'$scope',
-	'posts',
-	'post',
+	'petitions',
+	'petition',
 	function($scope, petitions, signatures){
 		$scope.signatures = petitions.signatures;
 	}]).config([
