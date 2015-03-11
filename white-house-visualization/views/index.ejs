@@ -28,7 +28,7 @@
   <link href="bower_components/snackbarjs/dist/snackbar.min.css" rel=stylesheet>
  -->
 
-  <script src="javascripts/angularApp.js"></script>
+<script src="javascripts/angularApp.js"></script>
 </head>
 <body ng-app="petitionVis">
   <div class="row">
@@ -91,7 +91,7 @@
 		  </div>
 		  <div class="panel-body">
 		    <p>{{petition.body}}</p>
-		    <p>Signature ID: {{petition.petitionId}}</p>
+		    <p>Petition ID: {{petition.petitionId}}</p>
 		    <p>Signature Count: {{petition.signatureCount}}</p>
 		    <p>Signatures Needed: {{petition.signaturesNeeded}}</p>
 		    <p>Deadline: {{petition.deadline}}</p>
@@ -99,6 +99,8 @@
 		    <p>Created: {{petition.created}}</p>
 		    <p>Signable: {{petition.isSignable}}</p>
 		    <p>Public: {{petition.isPublic}}</p>
+
+        <button class="btn btn-success" ng-click="showSignatures(petition)"><a href="#/signatures/{{petition._id}}">Show Signatures</button>
 
 		  <!--  <div class="progress progress-striped active">
                 <div progress class="progress-bar" ng-style="{ 'width' : '{{petition.signatureProgress}}%' }"></div>
@@ -109,5 +111,29 @@
 	</div>
 	</div>
   </script>
+
+
+  <script type="text/ng-template" id="/signatures.html">
+  <div class="page-header">
+    <h1 header>White House Petitions</h1>
+  </div>
+
+  <div ng-repeat="signature in Signatures track by $index" >
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 panelheader class="panel-title">{{$index +1}}. {{signature.name}}</a></h3>
+      </div>
+      <div class="panel-body">
+        <p>Signature ID: {{signature.signatureId}}</p>
+        <p>City: {{signature.city}}</p>
+        <p>State: {{signature.state}}</p>
+        <p>ZIP: {{signature.zip}}</p>
+      </div>
+    </div>
+  </div>
+  </div>
+  </script>
+
 </body>
 </html>
