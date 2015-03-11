@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/petitions', function(req, res, next) {
-	var q = Petition.find()
+	var q = Petition.find();
 
 	var sort = req.query.sort;
 	if (sort != null) {
@@ -58,19 +58,53 @@ router.get('/petitions', function(req, res, next) {
 
 router.param('petition', function(req, res, next, id) {
   var query = Petition.findById(id);
-  query.exec(function (err, post){
+  query.exec(function (err, petition){
     if (err) { return next(err); }
-    if (!post) { return next(new Error("Can't find petition")); }
+    if (!petition) { return next(new Error("Can't find petition")); }
 
-    req.post = post;
+    req.petition = petition;
     return next();
   });
 });
 
+
 router.get('/petitions/:petition', function(req, res) {
- //req.post.populate('signatures', function(err, post) {
     res.json(req.post);
- // });
+});
+
+
+router.get('/petitions/:petition/signatures', function(req, res, next) {
+	var query = Signature.where('petitionId').equals(req.petition.petitionId);
+	query.exec(function (err, signatures){
+    if (err) { return next(err); }
+    if (!signatures) { return next(new Error("Can't find signatures")); }
+		res.json(signatures);
+  	});
+});
+
+router.get('/signatures', function(req, res, next) {
+	var q = Signature.find();
+	q.exec(function(err, signatures) {
+		if(err){ return next(err); }
+		res.json(signatures);
+	});
+});
+
+
+router.param('signature', function(req, res, next, id) {
+  var query = Signature.findById(id);
+
+  query.exec(function (err, signature){
+    if (err) { return next(err); }
+    if (!signature) { return next(new Error("Can't find signature")); }
+
+    req.signature = signature;
+    return next();
+  });
+});
+
+router.get('/signatures/:signature', function(req, res) {
+  res.json(req.signature);
 });
 
 
