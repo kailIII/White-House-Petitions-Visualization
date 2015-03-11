@@ -5,7 +5,8 @@ var startTime = new Date().getTime();
 petitionVis.factory('petitions', ['$http', function($http){
 	var o = {
 		petitions: [],
-		visiblePetitions: []
+		visiblePetitions: [],
+		signatures: []
 	};
 
 	o.getAll = function() {
@@ -45,6 +46,12 @@ petitionVis.factory('petitions', ['$http', function($http){
 	o.getSortedGreaterThan = function(sortBy, reverseOrder, greaterThan) {
 		return $http.get('/petitions?sort=' + sortBy + '&reverse=' + reverseOrder.toString() + '&greaterThan=' + greaterThan).then(function(res){
 		   	o.petitions.push(res.data);
+		});
+	};
+
+	o.getSignatures = function(id) {
+		  	return $http.get('/petitions/' + id + "/signatures").then(function(res){
+				angular.copy(res.data, o.signatures);
 		});
 	};
 
@@ -144,8 +151,18 @@ petitionVis.controller('MainCtrl', [
 			listMax++
       		$scope.visiblePetitions.push($scope.petitions[listMax]);
 		};
-	}
-	]).config([
+
+		$scope.showSignatures = function(petition) {
+			console.log(petition.petitionId);
+		}
+	}])
+	.controller('SignaturesCtrl', [
+	'$scope',
+	'posts',
+	'post',
+	function($scope, petitions, signatures){
+		$scope.signatures = petitions.signatures;
+	}]).config([
 	'$stateProvider',
 	'$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
@@ -163,6 +180,16 @@ petitionVis.controller('MainCtrl', [
 				}]
 			}
 		})
+		.state('signatures', {
+		  url: '/signatures/{id}',
+		  templateUrl: '/signatures.html',
+		  controller: 'SignaturesCtrl',
+		  resolve: {
+			  petition: ['$stateParams', 'petitions', function($stateParams, petitions) {
+			    return petitions.getSignatures($stateParams.id);
+			  }]
+			}
+		});
 		$urlRouterProvider.otherwise('home');
 	}]);
 
