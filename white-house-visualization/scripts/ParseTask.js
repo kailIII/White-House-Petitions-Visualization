@@ -12,13 +12,15 @@ var rule = new schedule.RecurrenceRule();
 rule.hour = 12;
 
 var signatureRule = new schedule.RecurrenceRule();
-signatureRule.second = [0, 10, 20, 30, 40, 50];
+signatureRule.second = [0];//, 20, 40];
 
 var Petition = mongoose.model('Petition');
 var Issue = mongoose.model('Issue');
 var Signature = mongoose.model('Signature');
 
 var requestQueue = [];
+
+var signatureRetrievalRunning = false;
 
 function apiCall(url) {
 	request({
@@ -38,6 +40,8 @@ function parseJSON(body) {
 	var data = JSON.parse(body);
 	var petitions = data.results;
 	var count = petitions.length;
+
+	console.log("Count: " + count);
 
 	for (var i = 0; i < count; i++) {
 		addPetition(petitions[i]);
@@ -90,14 +94,13 @@ function addPetition(petition) {
 			thisPetition.save(function (err, savedPetition) {
 				if (err) return console.error(err);
 				console.log("Petition Saved: " + savedPetition.petitionId);
-				requestQueue.push(savedPetition);
-				});
+				requestQueue.push(savedPetition.petitionId);
 			});
+		});
 }
 
-function updateSignatures(petition) {
-	var queryURL = "https://api.whitehouse.gov/v1/petitions/" + petition.petitionId + "/signatures.json?limit=10000";
-
+function updateSignatures(petitionId) {
+	var queryURL = "https://api.whitehouse.gov/v1/petitions/" + petitionId + "/signatures.json?limit=10000";
 	request({
 		uri: queryURL,
 		method: "GET",
@@ -107,38 +110,37 @@ function updateSignatures(petition) {
 	}, function(error, response, body) {
 		if(error){ return console.log(error); }
 		console.log("Signature Download Complete");
-		parseSignatureJSON(body , petition);
+		parseSignatureJSON(body , petitionId);
+		body = null;
+		response = null;
 	});
-
-	//get the new signatures
-	//get the old signatures
-	//save the new signatures
-	//link the new signatures to the petition
-	//save the petition
-	//delete the old signatures
 }
 
-function parseSignatureJSON(body, petition) {
+function parseSignatureJSON(body, petitionId) {
 	var data = JSON.parse(body);
 	var signatures = data.results;
 	if (signatures != null) {
 		for (var i = 0; i < signatures.length; i++) {
-			addSignature(signatures[i], petition);
+			addSignature(signatures[i], petitionId);
 		}
+		signatures = null;
+		data = null;
+		body = null;
+		return;
 	}
 	else {
 		console.error("Signatures Returned Null");
 	}
 }
 
-function addSignature(signature, petition) {
+function addSignature(signature, petitionId) {
 	Signature.findOne({'signatureId': signature.id}, function (err, thisSignature) {
 				if (err) return console.log(err);
 				if (thisSignature == null) {
 					var thisSignature = new Signature();
 
 					thisSignature.signatureId = signature.id;
-					thisSignature.petitionId = petition.petitionId;
+					thisSignature.petitionId = petitionId;
 					thisSignature.name = signature.name;
 					thisSignature.city = signature.city;
 					thisSignature.state = signature.state;
@@ -147,8 +149,12 @@ function addSignature(signature, petition) {
 
 					thisSignature.save(function (err, savedSignatue) {
 						if (err) {return console.error(err);}
-						else {console.log("Signature Saved: " + savedSignatue.signatureId)}
+						else {
+							console.log("Signature Saved: " + savedSignatue.id);
+							}
 					});
+					thisSignature = null;
+					signature = null;
 		}
 	});
 }
@@ -172,6 +178,7 @@ function getNextSignatures() {
 var signatureQueueManager = schedule.scheduleJob(signatureRule, function() {
 	getNextSignatures();
 });
+
 
 apiCall("https://api.whitehouse.gov/v1/petitions.json?limit=3000");
 var recuringQuery = schedule.scheduleJob(rule, function(){

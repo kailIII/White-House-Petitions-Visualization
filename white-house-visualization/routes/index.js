@@ -90,7 +90,6 @@ router.get('/signatures', function(req, res, next) {
 	});
 });
 
-
 router.param('signature', function(req, res, next, id) {
   var query = Signature.findById(id);
 
