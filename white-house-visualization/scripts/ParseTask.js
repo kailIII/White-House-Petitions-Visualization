@@ -37,8 +37,15 @@ function apiCall(url) {
 }
 
 function parseJSON(body) {
-	var data = JSON.parse(body);
-	var petitions = data.results;
+	try {
+       	var data = JSON.parse(body);
+		var petitions = data.results;
+    } catch (e) {
+    	console.log(e);
+    	console.log(data);
+        return;
+    }
+
 	var count = petitions.length;
 
 	console.log("Count: " + count);
@@ -117,8 +124,15 @@ function updateSignatures(petitionId) {
 }
 
 function parseSignatureJSON(body, petitionId) {
-	var data = JSON.parse(body);
-	var signatures = data.results;
+	try {
+       	var data = JSON.parse(body);
+		var signatures = data.results;
+    } catch (e) {
+    	console.log(e);
+    	console.log(data);
+        return;
+    }
+
 	if (signatures != null) {
 		for (var i = 0; i < signatures.length; i++) {
 			addSignature(signatures[i], petitionId);
